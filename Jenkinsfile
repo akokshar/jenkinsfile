@@ -22,9 +22,6 @@
 //  }
 //}
 //
-kubernetes.pod('hello')
-  .withImage('ubuntu')
-  .withVolumeClaim('/home/jenkins/agent/workspace/', 'jenkins-workspace')
-  .inside {
+kubernetes.pod('hello').withImage('ubuntu').withVolumeClaim('/home/jenkins/agent/workspace/', 'jenkins-workspace').inside {
     sh 'uname -a'
 }
