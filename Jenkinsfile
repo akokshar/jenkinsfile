@@ -22,6 +22,9 @@ podTemplate (
   }
 }
 
-kubernetes.pod('hello').withImage('ubuntu').inside {
+kubernetes.pod('hello')
+  .withImage('ubuntu')
+  .withVolumeClaim('/home/jenkins/workspace/', 'jenkins-workspace')
+  .inside {
     sh 'uname -a'
 }
