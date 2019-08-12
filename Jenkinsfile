@@ -22,3 +22,6 @@ podTemplate (
   }
 }
 
+kubernetes.pod('hello').withImage('ubuntu').inside {
+    sh 'uname -a'
+}
