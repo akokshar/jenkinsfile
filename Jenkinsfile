@@ -24,7 +24,7 @@
 //
 kubernetes.pod('hello')
   .withImage('ubuntu')
-//  .withVolumeClaim('/home/jenkins/agent', 'jenkins-workspace', false)
+  .withVolumeClaim('/home/jenkins/agent', 'workspace-volume', false)
   .inside {
     sh 'uname -a'
 }
