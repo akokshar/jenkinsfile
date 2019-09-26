@@ -1,4 +1,5 @@
 pipeline {
+
   agent {
     kubernetes {
       defaultContainer 'jnlp'
@@ -21,7 +22,7 @@ spec:
     imagePullPolicy: Never
     env:
     - name: DOCKER_HOST
-      value: tcp://docker.devops.svc:2375
+      value: tcp://docker:2375
     command:
     - cat
     tty: true
@@ -30,25 +31,35 @@ spec:
   }
 
   stages {
-    stage('Test') {
-      steps {
-        sh 'pwd'
-        sh 'env'
-      }
-    }
+
+    // stage('Checks...') {
+    //   steps {
+    //     script {
+    //       def e = env.getEnvironment()
+    //       e.each { k, v ->
+    //         println("${k} = '${v}'")
+    //       }
+    //     }
+    //   }
+    // }
+
     stage('Build') {
       steps {
         container('golang') {
-          sh 'pwd'
-          sh 'ls -la'
-          sh 'id'
-          sh 'CGO_ENABLED=0 GOCACHE=/tmp go build -o app .'
+          withEnv([
+            'CGO_ENABLED=0',
+            'GOCACHE=/tmp'
+          ]) {
+            sh 'go test ./...'
+            sh 'go build -o app .'
+          }
         }
         container('docker-cli') {
           sh '/docker build -t devops:${BRANCH_NAME} .'
         }
       }
     }
+
     stage('Deploy') {
       steps {
         sh 'echo Deploy'

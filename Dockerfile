@@ -1,7 +1,13 @@
-FROM golang:latest as builder
-COPY . .
-RUN CGO_ENABLED=0 go build -o /app .
+# FROM golang:latest as builder
+
+# RUN go version
+# RUN pwd
+# COPY . .
+# RUN ls
+# RUN CGO_ENABLED=0 go build -o /app .
 
 FROM scratch
-COPY --from=builder /app /
+
+COPY app /
+
 ENTRYPOINT ["/app"]
