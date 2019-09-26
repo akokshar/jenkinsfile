@@ -7,9 +7,15 @@ apiVersion: v1
 kind: Pod
 metadata:
   labels:
-    purpose: devops
+    branch: ${BRANCH_NAME}
 spec:
   containers:
+  - name: golang
+    image: golang:latest
+    imagePullPolicy: IfNotPresent
+    command:
+    - cat
+    tty: true
   - name: docker-cli
     image: docker-cli:19.03.2
     imagePullPolicy: Never
@@ -32,6 +38,12 @@ spec:
     }
     stage('Build') {
       steps {
+        container('golang') {
+          sh 'pwd'
+          sh 'ls -la'
+          sh 'id'
+          sh 'CGO_ENABLED=0 GOCACHE=/tmp go build -o app .'
+        }
         container('docker-cli') {
           sh '/docker build -t devops:${BRANCH_NAME} .'
         }
